@@ -3,6 +3,7 @@ import { getTournamentTeamRosters } from '@/lib/db/queries'
 import { TeamCard } from '@/components/ui/TeamCard'
 import { StatTile } from '@/components/ui/StatTile'
 import type { Metadata } from 'next'
+import type { Team } from '@/lib/api/schemas'
 
 export const revalidate = 120
 
@@ -11,12 +12,12 @@ export default async function TeamsPage({ params }: { params: Promise<{ tourname
 
   // When slug matches "King of the Reed", source teams from Supabase view
   const normalized = decodeURIComponent(tournamentSlug).toLowerCase().replace(/\s+/g, '-')
-  let data = await (async () => {
+  let data: Team[] = await (async () => {
     if (normalized === 'king-of-the-reed') {
       const tournamentId = '0880ac2b-6d8d-4849-a22e-c1c32132e6c3'
       const rows = await getTournamentTeamRosters(tournamentId)
       // Distinct teams by team_id
-      const map = new Map<string, { slug: string; name: string; logo?: string; record?: { wins: number; losses: number } }>()
+      const map = new Map<string, Team>()
       for (const r of rows) {
         const id = String(r.team_id ?? '')
         if (!id) continue
@@ -25,7 +26,9 @@ export default async function TeamsPage({ params }: { params: Promise<{ tourname
             slug: id, // use team_id as slug for now
             name: r.team_name ?? id,
             logo: r.team_logo ?? undefined,
-          })
+            // seed unknown from roster view; leave undefined
+            // record could be derived from results; leave undefined for now
+          } as Team)
         }
       }
       return Array.from(map.values())
