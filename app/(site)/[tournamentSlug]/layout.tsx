@@ -21,7 +21,7 @@ export default async function TournamentLayout({
       <ThemeLoader tournamentSlug={slug} />
       <MainNav tournamentSlug={slug} />
       {/* Announcements (client) - provide a placeholder fetcher for now */}
-      <AnnouncementRail fetcher={async () => []} />
+      <AnnouncementRail />
       <QueryProvider>
         <main className="max-w-7xl mx-auto px-4 py-6">
           <Breadcrumbs tournamentSlug={slug} />
