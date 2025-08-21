@@ -1,5 +1,5 @@
 import { getSchedule } from '@/lib/api/queries'
-import { MatchList } from '@/components/composition/MatchList'
+import { ScheduleClient } from '@/components/schedule/ScheduleClient'
 
 export const revalidate = 60
 
@@ -8,7 +8,8 @@ export default async function SchedulePage({ params }: { params: { tournamentSlu
   return (
     <div className="grid gap-4">
       <h1 className="text-2xl font-bold">Schedule</h1>
-      <MatchList data={data} />
+      {/* Client wrapper allows filters and view toggles */}
+      <ScheduleClient data={data as any} />
     </div>
   )
 }
