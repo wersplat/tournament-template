@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typedRoutes: true,
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
     },
-    typedRoutes: true,
     optimizePackageImports: [
       '@material-tailwind/react',
       '@tanstack/react-query',

@@ -29,5 +29,6 @@ html, body {
 
 /* Skeleton base */
 .skeleton {
-  @apply animate-pulse bg-[color:var(--card)];
+  @apply animate-pulse;
+  background-color: var(--card);
 }

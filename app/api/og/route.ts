@@ -1,5 +1,6 @@
 import { ImageResponse } from '@vercel/og'
 import { NextRequest } from 'next/server'
+import React from 'react'
 
 export const runtime = 'edge'
 
@@ -10,14 +11,26 @@ export async function GET(req: NextRequest) {
   const bg = '#0b0b0c'
 
   return new ImageResponse(
-    (
-      <div style={{ display: 'flex', height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: bg, color: 'white' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
-          <div style={{ fontSize: 64, fontWeight: 800 }}> {tournament} </div>
-          <div style={{ width: 240, height: 8, backgroundColor: primary }} />
-          <div style={{ fontSize: 28, opacity: 0.8 }}>Unified Pro-Am Template</div>
-        </div>
-      </div>
+    React.createElement(
+      'div',
+      {
+        style: {
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: bg,
+          color: 'white',
+        },
+      },
+      React.createElement(
+        'div',
+        { style: { display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' } },
+        React.createElement('div', { style: { fontSize: 64, fontWeight: 800 } }, tournament),
+        React.createElement('div', { style: { width: 240, height: 8, backgroundColor: primary } }),
+        React.createElement('div', { style: { fontSize: 28, opacity: 0.8 } }, 'Unified Pro-Am Template')
+      )
     ),
     { width: 1200, height: 630 }
   )
