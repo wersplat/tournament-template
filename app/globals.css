@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* CSS variable defaults (overridden by ThemeLoader) */
 :root {
   --bg: #0b0b0c;
@@ -21,14 +17,5 @@ html, body {
   color: var(--fg);
 }
 
-/* Focus ring using --primary */
-*:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-/* Skeleton base */
-.skeleton {
-  @apply animate-pulse;
-  background-color: var(--card);
-}
+/* Minimal baseline; Tailwind temporarily disabled for build isolation. */
+*, *::before, *::after { box-sizing: border-box; }

@@ -3,8 +3,9 @@ import { Scoreboard } from '@/components/ui/Scoreboard'
 import { StatTile } from '@/components/ui/StatTile'
 import type { Metadata } from 'next'
 
-export default async function MatchDetailPage({ params }: { params: { tournamentSlug: string; matchId: string }}) {
-  const m = await getMatch(params.matchId)
+export default async function MatchDetailPage({ params }: { params: Promise<{ tournamentSlug: string; matchId: string }> }) {
+  const { matchId } = await params
+  const m = await getMatch(matchId)
   return (
     <div className="grid gap-4">
       <h1 className="text-2xl font-bold">Match {m.id}</h1>
@@ -28,10 +29,11 @@ export default async function MatchDetailPage({ params }: { params: { tournament
   )
 }
 
-export async function generateMetadata({ params }: { params: { tournamentSlug: string; matchId: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ tournamentSlug: string; matchId: string }> }): Promise<Metadata> {
   try {
-    const t = await getTournament(params.tournamentSlug)
-    const m = await getMatch(params.matchId)
+    const { tournamentSlug, matchId } = await params
+    const t = await getTournament(tournamentSlug)
+    const m = await getMatch(matchId)
     const title = `${t.name} • Match ${m.id}: ${m.teams[0].teamSlug} vs ${m.teams[1].teamSlug}`
     const description = `Stage: ${m.stage ?? 'Match'} • Scheduled: ${m.scheduledAt ? new Date(m.scheduledAt).toLocaleString() : 'TBD'}`
     return {
@@ -41,6 +43,7 @@ export async function generateMetadata({ params }: { params: { tournamentSlug: s
       twitter: { card: 'summary_large_image', title, description, images: [`/api/og?tournament=${encodeURIComponent(t.slug)}`] },
     }
   } catch {
-    return { title: `Match ${params.matchId}` }
+    const p = await params
+    return { title: `Match ${p.matchId}` }
   }
 }

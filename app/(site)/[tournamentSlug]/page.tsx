@@ -3,8 +3,8 @@ import { getNewsList, getSchedule, getTournament } from '@/lib/api/queries'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default async function HomePage({ params }: { params: { tournamentSlug: string } }) {
-  const slug = params.tournamentSlug
+export default async function HomePage({ params }: { params: Promise<{ tournamentSlug: string }> }) {
+  const { tournamentSlug: slug } = await params
   const [tournament, schedule, news] = await Promise.all([
     getTournament(slug),
     getSchedule(slug),
