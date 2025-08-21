@@ -1,8 +1,9 @@
 import { getTeam } from '@/lib/api/queries'
 import Image from 'next/image'
 
-export default async function TeamDetailPage({ params }: { params: { tournamentSlug: string; teamSlug: string }}) {
-  const team = await getTeam(params.teamSlug)
+export default async function TeamDetailPage({ params }: { params: Promise<{ tournamentSlug: string; teamSlug: string }> }) {
+  const { teamSlug } = await params
+  const team = await getTeam(teamSlug)
   return (
     <div className="grid gap-4">
       <div className="flex items-center gap-4">

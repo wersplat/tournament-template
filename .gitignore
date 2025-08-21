@@ -6,3 +6,15 @@ node_modules
 next.config.js
 /.next/
 
+target
+dist
+logs
+public
+.cache
+.vscode
+.DS_Store
+.idea
+.next
+yarn-error.log
+npm-debug.log
+pnpm-debug.log

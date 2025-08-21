@@ -7,14 +7,14 @@ import { AnnouncementRail } from '@/components/a11y/AnnouncementRail'
 import type { Metadata } from 'next'
 import { getTournament } from '@/lib/api/queries'
 
-export default function TournamentLayout({
+export default async function TournamentLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { tournamentSlug: string }
+  params: Promise<{ tournamentSlug: string }>
 }) {
-  const slug = params.tournamentSlug
+  const { tournamentSlug: slug } = await params
   return (
     <>
       {/* Inline CSS vars for theming */}
@@ -33,9 +33,10 @@ export default function TournamentLayout({
   )
 }
 
-export async function generateMetadata({ params }: { params: { tournamentSlug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ tournamentSlug: string }> }): Promise<Metadata> {
   try {
-    const t = await getTournament(params.tournamentSlug)
+    const { tournamentSlug } = await params
+    const t = await getTournament(tournamentSlug)
     const title = `${t.name} • Unified Pro-Am`
     const description = t.description ?? `Schedules, standings, teams, players and news for ${t.name}.`
     return {

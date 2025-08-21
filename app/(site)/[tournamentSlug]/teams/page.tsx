@@ -5,8 +5,9 @@ import type { Metadata } from 'next'
 
 export const revalidate = 120
 
-export default async function TeamsPage({ params }: { params: { tournamentSlug: string } }) {
-  const data = await getTeams(params.tournamentSlug)
+export default async function TeamsPage({ params }: { params: Promise<{ tournamentSlug: string }> }) {
+  const { tournamentSlug } = await params
+  const data = await getTeams(tournamentSlug)
   const totalTeams = data.length
   return (
     <div className="grid gap-4">
@@ -22,7 +23,7 @@ export default async function TeamsPage({ params }: { params: { tournamentSlug: 
         {data.map((t) => (
           <TeamCard
             key={t.slug}
-            tournamentSlug={params.tournamentSlug}
+            tournamentSlug={tournamentSlug}
             team={{
               slug: t.slug,
               name: t.name,
@@ -36,9 +37,10 @@ export default async function TeamsPage({ params }: { params: { tournamentSlug: 
   )
 }
 
-export async function generateMetadata({ params }: { params: { tournamentSlug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ tournamentSlug: string }> }): Promise<Metadata> {
   try {
-    const t = await getTournament(params.tournamentSlug)
+    const { tournamentSlug } = await params
+    const t = await getTournament(tournamentSlug)
     return {
       title: `${t.name} • Teams`,
       description: `Browse teams at ${t.name}. Rosters, seeds, and records.`,

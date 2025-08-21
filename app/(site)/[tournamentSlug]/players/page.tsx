@@ -5,8 +5,9 @@ import type { Metadata } from 'next'
 
 export const revalidate = 120
 
-export default async function PlayersPage({ params }: { params: { tournamentSlug: string } }) {
-  const data = await getPlayers(params.tournamentSlug)
+export default async function PlayersPage({ params }: { params: Promise<{ tournamentSlug: string }> }) {
+  const { tournamentSlug } = await params
+  const data = await getPlayers(tournamentSlug)
   const totalPlayers = data.length
   return (
     <div className="grid gap-4">
@@ -26,9 +27,10 @@ export default async function PlayersPage({ params }: { params: { tournamentSlug
   )
 }
 
-export async function generateMetadata({ params }: { params: { tournamentSlug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ tournamentSlug: string }> }): Promise<Metadata> {
   try {
-    const t = await getTournament(params.tournamentSlug)
+    const { tournamentSlug } = await params
+    const t = await getTournament(tournamentSlug)
     return {
       title: `${t.name} • Players`,
       description: `Browse players at ${t.name}. Profiles, roles, and teams.`,

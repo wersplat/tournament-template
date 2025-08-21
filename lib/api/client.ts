@@ -16,7 +16,7 @@ export async function apiFetch<T>(path: string, opts: NextFetchInit = {}): Promi
     ? new URL(path.replace(/^\//, ''), base).toString()
     : `/api/dev?path=${encodeURIComponent(path)}`
 
-  const cookieStore = typeof cookies === 'function' ? cookies() : undefined
+  const cookieStore = typeof cookies === 'function' ? await cookies() : undefined
   const authToken = cookieStore?.get('auth_token')?.value
 
   const headers = new Headers(opts.headers || {})

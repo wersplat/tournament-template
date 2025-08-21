@@ -20,7 +20,7 @@ export default async function HomePage({ params }: { params: Promise<{ tournamen
           <p className="text-muted mt-1 max-w-2xl">{tournament.description ?? 'Welcome to the Unified Pro-Am Tournament.'}</p>
           <div className="mt-4 flex gap-3">
             <Link href="#" className="inline-flex items-center justify-center rounded-[var(--radius)] font-medium transition-colors bg-[color:var(--primary)] text-black hover:brightness-110 px-4 py-2 text-sm">Register</Link>
-            <Link href={routes.schedule(slug)} className="inline-flex items-center justify-center rounded-[var(--radius)] font-medium transition-colors bg-transparent border border-white/10 hover:bg-white/5 px-4 py-2 text-sm">View Schedule</Link>
+            <Link href={routes.schedule(slug) as any} className="inline-flex items-center justify-center rounded-[var(--radius)] font-medium transition-colors bg-transparent border border-white/10 hover:bg-white/5 px-4 py-2 text-sm">View Schedule</Link>
           </div>
         </div>
       </section>
@@ -41,7 +41,7 @@ export default async function HomePage({ params }: { params: Promise<{ tournamen
         <h2 className="text-xl font-semibold mb-3">Latest News</h2>
         <div className="grid gap-3 sm:grid-cols-3">
           {news.slice(0, 3).map((n) => (
-            <Link key={n.slug} href={routes.newsItem(slug, n.slug)} className="rounded-[var(--radius)] border border-white/10 p-4 hover:bg-white/5">
+            <Link key={n.slug} href={routes.newsItem(slug, n.slug) as any} className="rounded-[var(--radius)] border border-white/10 p-4 hover:bg-white/5">
               <div className="text-sm text-muted">{new Date(n.publishedAt ?? Date.now()).toLocaleDateString()}</div>
               <div className="font-semibold">{n.title}</div>
               <div className="text-sm text-muted">{n.excerpt}</div>
