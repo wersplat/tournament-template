@@ -1,4 +1,5 @@
 import { getTeams, getTournament } from '@/lib/api/queries'
+import { getTournamentTeamRosters } from '@/lib/db/queries'
 import { TeamCard } from '@/components/ui/TeamCard'
 import { StatTile } from '@/components/ui/StatTile'
 import type { Metadata } from 'next'
@@ -7,7 +8,31 @@ export const revalidate = 120
 
 export default async function TeamsPage({ params }: { params: Promise<{ tournamentSlug: string }> }) {
   const { tournamentSlug } = await params
-  const data = await getTeams(tournamentSlug)
+
+  // When slug matches "King of the Reed", source teams from Supabase view
+  const normalized = decodeURIComponent(tournamentSlug).toLowerCase().replace(/\s+/g, '-')
+  let data = await (async () => {
+    if (normalized === 'king-of-the-reed') {
+      const tournamentId = '0880ac2b-6d8d-4849-a22e-c1c32132e6c3'
+      const rows = await getTournamentTeamRosters(tournamentId)
+      // Distinct teams by team_id
+      const map = new Map<string, { slug: string; name: string; logo?: string; record?: { wins: number; losses: number } }>()
+      for (const r of rows) {
+        const id = String(r.team_id ?? '')
+        if (!id) continue
+        if (!map.has(id)) {
+          map.set(id, {
+            slug: id, // use team_id as slug for now
+            name: r.team_name ?? id,
+            logo: r.team_logo ?? undefined,
+          })
+        }
+      }
+      return Array.from(map.values())
+    }
+    // Fallback to existing API for other slugs
+    return getTeams(tournamentSlug)
+  })()
   const totalTeams = data.length
   return (
     <div className="grid gap-4">

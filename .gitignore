@@ -18,3 +18,4 @@ public
 yarn-error.log
 npm-debug.log
 pnpm-debug.log
+.env.local
